@@ -116,11 +116,18 @@ export default function Game() {
         );
     });
 
+    function restartGame() {
+        setHistory([Array(9).fill(null)]);
+        setCurrentMove(0);
+    }
+
     // Render the game board and the list of move buttons
     return (
         <div className="game">
             <div className="game-board">
                 <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+                <br></br>
+                <button onClick = {restartGame}>Restart Game</button>
             </div>
             <div className="game-info">
                 <ol>{moves}</ol>
@@ -142,17 +149,16 @@ function calculateWinner(squares) {
         [0, 4, 8],
         [2, 4, 6],
     ];
-    // Check each combination to see if there's a winning line
     for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
         // If all three squares in a line are the same and not null, return the winner and the line
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
             return { winner: squares[a], line: lines[i] };
-        } else {
-            // Check if the board is full and no winning line found, return a draw
-            if (squares.every((square) => square !== null)) {
-                return { winner: 'Draw', line: [] }            }
         }
+    }
+    // Check if the board is full and no winning line found, return a draw
+    if (squares.every((square) => square !== null)) {
+        return { winner: 'Draw', line: [] };
     }
     // If no winner, return null
     return null;
